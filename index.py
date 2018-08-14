@@ -10,7 +10,7 @@ from telebot import types
 # Запросы
 queries = {
     'table_users_create': "CREATE TABLE IF NOT EXISTS users (id INTEGER, chat_id INTEGER, username INTEGER, money INTEGER, referal VARCHAR(16), rating INTEGER)",
-    'table_quetion_create': "CREATE TABLE IF NOT EXISTS shits (id INTEGER, category VARCHAR(16), question VARCHAR(128))",
+    'table_question_create': "CREATE TABLE IF NOT EXISTS questions (id INTEGER, category VARCHAR(16), question VARCHAR(128))",
         #'update_some_shit': "UPDATE shits SET ",
     'user_insert': "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)",
     'user_delete': "DELETE FROM users WHERE chat_id = ?",
@@ -18,7 +18,7 @@ queries = {
     'users_get': "SELECT * FROM users"
 }
 
-DBNAME = 'crypto_shit.db'
+DBNAME = 'main.db'
 
 
 def get_db_connection(dbname):
@@ -31,8 +31,8 @@ def get_db_connection(dbname):
 bot = telebot.TeleBot(const.token)
 
 connection = get_db_connection('main.db')
-connection.execute(queries['table_create'])
-connection.execute(queries['table_2_create'])
+connection.execute(queries['table_users_create'])
+connection.execute(queries['table_question_create'])
 connection.commit()
 connection.close()
 
@@ -47,10 +47,10 @@ def start(message):
         global max_id
         # Создание нумерации пользователей
         cursor.execute('SELECT max(id) FROM users')
-        max_id = cursor.fetchone()[0]
+        max_id = cursor.fetchone()
         print(max_id)
         try:
-            if max_id is None:
+            if max_id[0] is None:
                 max_id = 0
         except:
             pass
@@ -64,31 +64,29 @@ def start(message):
         connection.commit()
 
         print(message.chat.username, ' начал(-ла) игру')
-        bot.send_message(message.chat.id, 'Привет, ' + message.chat.username + ', добро пожаловать в Crypto Shit bot.')
+        bot.send_message(message.chat.id, 'Привет, ' + message.chat.username + ', добро пожаловать в BrainStorm Bot.')
 
-        keyboard_defs.start_keyboard(message)
     else:
         bot.send_message(message.chat.id, 'Загружаю твой прогресс...')
-# Здесь будет переход на основной деф
 # Здесь будет переход на кавиатуру
         cursor.close()
         connection.close()
         print(message.chat.username, 'Запустил(-ла ) бота')
+    keyboard_defs.start_keyboard(message)
 
 @bot.message_handler(content_types='text')
 def start_handler(message):
-    if message.text == 'Заработать!':
+    if message.text == 'Заработать':
         keyboard_defs.paymenu_keyboard(message)
-        defs.pay_def(message)
     elif message.text == 'На интерес':
         keyboard_defs.freemenu_keyboard(message)
-        defs.free_def(message)
     elif message.text == 'Рэйтинг':
-        keyboard_defs.freemenu_keyboard(message)
-        defs.free_def(message)
-    elif message.text == 'About':
-        keyboard_defs.freemenu_keyboard(message)
-        defs.about_def(message)
+        keyboard_defs.rating_keyboard(message)
+    elif message.text == 'Рэйтинг':
+        keyboard_defs.about_keyboard(message)
+    elif message.text == 'Назад':
+        keyboard_defs.start_keyboard(message)
+
 
 
 
