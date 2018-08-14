@@ -1,6 +1,7 @@
 import telebot
 import keyboard_defs
 import const
+import defs
 import clases
 import texts
 import sqlite3
@@ -12,7 +13,6 @@ queries = {
     'table_quetion_create': "CREATE TABLE IF NOT EXISTS shits (id INTEGER, category VARCHAR(16), question VARCHAR(128))",
         #'update_some_shit': "UPDATE shits SET ",
     'user_insert': "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)",
-    'shit_insert': "INSERT INTO shits VALUES(?, ?, ?, ?, ?, ?, ?)",
     'user_delete': "DELETE FROM users WHERE chat_id = ?",
     'user_get': "SELECT * FROM users WHERE chat_id = ?",
     'users_get': "SELECT * FROM users"
@@ -66,7 +66,7 @@ def start(message):
         print(message.chat.username, ' начал(-ла) игру')
         bot.send_message(message.chat.id, 'Привет, ' + message.chat.username + ', добро пожаловать в Crypto Shit bot.')
 
-        ##Переход на клавиатуру регистрации
+        keyboard_defs.start_keyboard(message)
     else:
         bot.send_message(message.chat.id, 'Загружаю твой прогресс...')
 # Здесь будет переход на основной деф
@@ -76,10 +76,20 @@ def start(message):
         print(message.chat.username, 'Запустил(-ла ) бота')
 
 @bot.message_handler(content_types='text')
-def (message):
+def start_handler(message):
+    if message.text == 'Заработать!':
+        keyboard_defs.paymenu_keyboard(message)
+        defs.pay_def(message)
+    elif message.text == 'На интерес':
+        keyboard_defs.freemenu_keyboard(message)
+        defs.free_def(message)
+    elif message.text == 'Рэйтинг':
+        keyboard_defs.freemenu_keyboard(message)
+        defs.free_def(message)
+    elif message.text == 'About':
+        keyboard_defs.freemenu_keyboard(message)
+        defs.about_def(message)
 
-@bot.message_handler(content_types='text')
-def start(message):
 
 
 
