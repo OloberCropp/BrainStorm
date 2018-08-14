@@ -2,7 +2,7 @@ import keyboard_defs
 import telebot
 
 def pay_def(message):
-    if message.text == 'Заработать!':
+    if message.text == 'Заработать':
         keyboard_defs.paymenu_keyboard(message)
 
 def free_def(message):
